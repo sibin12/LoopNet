@@ -6,14 +6,14 @@ import { useState } from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './pages/home/Home';
 import Video from './pages/video/Video';
-
+import Register from './pages/register/Register'
 const Container = styled.div`
  display:flex`;
 const Main = styled.div`
 flex:7;
 background-color: ${({theme}) => theme.bgLighter};
 color: black;
-
+overflow:hidden;
 `
 const Wrapper = styled.div`
 padding:22px 10px;
@@ -35,13 +35,12 @@ function App() {
               <Routes>
                 <Route path='/'>
                   <Route index element={<Home />} />
+                  <Route path="register" element={<Register />} />
                   <Route path='video' >
                     <Route path=':id' element={<Video />} />
                   </Route>
                 </Route>
               </Routes>
-            
-             
             </Wrapper>
           </Main>
           </BrowserRouter>

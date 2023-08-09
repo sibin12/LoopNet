@@ -4,6 +4,8 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ShareIcon from '@mui/icons-material/Share';
+import Comments from '../../components/coments/Comments';
+import Card from '../../components/card/Card';
 
 const Container = styled.div`
 display: flex;
@@ -53,9 +55,57 @@ border: 0.5px solid grey;
 `;
 
 const Recommendation = styled.div`
-flex: 2
+flex: 2;
 `;
 
+const User = styled.div`
+dispaly: flex;
+justify-content: space-between;
+`;
+
+const UserInfo = styled.div`
+display: flex;
+gap:20px;
+`;
+
+const Image = styled.img`
+width: 50px;
+height:45px;
+border-radius: 50%;
+background-color:grey;
+`;
+
+const UserDetail = styled.div`
+display: flex;
+flex-direction: column;
+color: ${({theme})=> theme.text}
+`;
+
+const UserName = styled.span`
+ 
+`;
+
+const UserCounter = styled.span`
+margin-top:5px;
+margin-bottom: 20px;
+color: ${({theme})=> theme.text}
+font-size: 12px;
+`;
+
+const Description = styled.p`
+font-size: 14px;
+`;
+
+const Subscribe = styled.button`
+background-color:#3ea6ff;
+font-weight: 500;
+color:white;
+border: none;
+border-radius:3px;
+height: max-content;
+padding: 10px 20px;
+cursor: pointer;
+`;
  
 
 function Video() {
@@ -82,8 +132,30 @@ function Video() {
                 </Buttons> 
             </Details>
             <Hr />
+            <User>
+                <UserInfo>
+                    <Image />
+                    <UserDetail>
+                        <UserName>username</UserName>
+                        <UserCounter>100 Subscribers</UserCounter>
+                        <Description>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni blanditiis nemo doloribus optio vitae quis incidunt nobis quo facilis nostrum.</Description>
+                    </UserDetail>
+                        <Subscribe>subscribe</Subscribe>
+                </UserInfo>
+            </User>
+            < Hr />
+            <Comments />
         </Content>
-        <Recommendation>recommendation</Recommendation>
+        <Recommendation>
+            <Card type="sm"/>
+            <Card type="sm"/>
+            <Card type="sm"/>
+            <Card type="sm"/>
+            <Card type="sm"/>
+            <Card type="sm"/>
+            <Card type="sm"/>
+           
+        </Recommendation>
     </Container>
   )
 }

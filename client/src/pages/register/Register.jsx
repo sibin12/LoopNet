@@ -1,6 +1,7 @@
 import React ,{useState} from 'react'
 import './Register.scss';
 import styled from "styled-components";
+// import './Register.scss'
 
 const Container = styled.div`
   display: flex;
@@ -45,7 +46,7 @@ const Button = styled.button`
   padding: 10px 20px;
   font-weight: 500;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.soft};
+  background-color:lightblue;
   color: ${({ theme }) => theme.textSoft};
 `;
 
@@ -74,7 +75,7 @@ function Register() {
     <Container>
     <Wrapper>
       <Title>Sign in</Title>
-      <SubTitle>to continue to LamaTube</SubTitle>
+      <SubTitle>to continue to LoopNet</SubTitle>
       <Input
         placeholder="username"
         onChange={(e) => setName(e.target.value)}
@@ -85,8 +86,6 @@ function Register() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <Button onClick={handleLogin}>Sign in</Button>
-      <Title>or</Title>
-      {/* <Button onClick={signInWithGoogle}>Signin with Google</Button> */}
       <Title>or</Title>
       <Input
         placeholder="username"

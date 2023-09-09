@@ -1,80 +1,147 @@
-import React from 'react'
+import React ,{useState}from 'react'
 import styled from '@emotion/styled'
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import './Navbar.css'
-
+import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
+import loopnet from '../../assets/loop.png'
+import {toggle} from '../../redux/authSlice'
+import './Navbar.scss'
+import { Link,  useNavigate } from 'react-router-dom';
+import RegisterModal from '../../pages/user/modal/RegisterModal';
+import { useSelector ,useDispatch } from 'react-redux';
 
 const Container = styled.div`
-position:sticky;
-top:0;
-background-color:${({theme}) =>theme.bg};
-height:56px;
-`
+position: sticky;
+top: 0;
+background-color:whitesmoke;
+height: 56px;
+
+@media (max-width: 426px) {
+  height:110px;
+}
+`;
+
 const Wrapper = styled.div`
-display:flex;
+display: flex;
 align-items: center;
-justify-content: flex-end;
+justify-content: space-between; /* Adjust the alignment as needed */
 height: 100%;
 padding: 0px 20px;
 position: relative;
-`
-
-const Search = styled.div`
-width:35%;
-position: absolute;
-left:0px;
-right:0px;
-margin:auto;
-display:flex;
-align-items: center;
-justify-content:space-between;
-padding:5px;
-border:1px solid #ccc;
-border-radius:3px;
-margin-top:10px;
-`
-
-const Input = styled.div`
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 4px;
-font-size: 16px;
+flex-wrap: wrap; /* Allow content to wrap to the next line on smaller screens */
+   
+// @media (min-width: 768px) {
+//   flex-direction: column; /* Change flex direction on screens >= 768px */
+// }
 `;
 
-const Button = styled.div`
-width:90px;
-height:auto;
-padding: 5px 15px;
-background-color: transparent;
-border: 1px solid #3ea6ff;
-color:#3ea6ff;
-border-radius: 3px;
-font-weight: 500;
-margin-top:10px;
-cursor: pointer;
+const Logo = styled.div`
+// position:absolute;
+font-weight:bold;
+font-size:30px;
+margin-right:auto;
 display:flex;
 align-items: center;
-gap: 5px;
+margin-top:10px;
+cursor:pointer;
+`;
+
+const Search = styled.div`
+width: 35%; /* Take up full width on small screens */
+  max-width: 300px; /* Limit width on larger screens */
+  // position: absolute;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: ${({ theme }) => theme.text};
+  margin-top: 10px; /* Add spacing between Logo and Search on small screens */
+`;
+
+const Input = styled.input`
+  border: none;
+  background-color: transparent;
+  outline: none;
+  color: ${({ theme }) => theme.text};
+  width: 80%; /* Take up most of the available width */
+
+`;
+
+const Button = styled.button`
+  padding: 5px 15px;
+  background-color: transparent;
+  border: 1px solid #3ea6ff;
+  color: #3ea6ff;
+  border-radius: 3px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left:auto;
+  gap: 5px;
+  margin-top: 10px; /* Add spacing between Search and Button on small screens */
+ 
+`;
+
+
+const Img = styled.img`
+height:25px;
+padding-left:2px;
 `
 
 
 function Navbar() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {user} =useSelector((state)=> state.auth)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [q, setQ] = useState("")
+   console.log(user,"user");
+  const openModal = () => {
+     setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    console.log("modal closing");
+    setIsModalOpen(false);
+  };
+  const toggleMenu = () => {
+    console.log("hi");
+      dispatch(toggle())
+  };
+
   return (
 <Container>
     <Wrapper>
+                <Logo >
+                   
+                    <DehazeOutlinedIcon   onClick={toggleMenu}/>
+                    <Img src={loopnet} />LoopNet
+                   
+                </Logo>
+  
   <Search>
-    <input type='text' placeholder='SEARCH' />
-    <SearchIcon />
+
+    <Input type='text' placeholder='SEARCH' onChange={(e)=>setQ(e.target.value)} />
+    <SearchIcon onClick={()=>navigate(`/search?q=${q}`)} />
+
   </Search>
-  <Button>
-<AccountCircleIcon />
-    SIGN IN
-  </Button>
+   <Button onClick={!user && openModal}>
+          <AccountCircleIcon />
+          {user ? user.username : "SIGN IN"}
+        </Button>
+        <RegisterModal isOpen={isModalOpen && !user} onClose={closeModal} />
+
+
 </Wrapper>
 
     </Container>
   )
 }
-
+         
 export default Navbar

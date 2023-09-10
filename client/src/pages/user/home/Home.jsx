@@ -1,12 +1,10 @@
-import axios from 'axios'
-// import Card from '../../../../components/card/Card'
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { videoInstance } from '../../../utils/axios'
 import { useSelector } from 'react-redux'
-import { toggle } from '../../../redux/authSlice'
 import Card from '../../../components/user/card/Card'
-import ImageUploaderWithManualCrop from '../../../components/dummy'
+
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr); /* Start with 1 column for small screens */
@@ -32,33 +30,31 @@ const Container = styled.div`
 `;
 
 
-function Home({type}) {
-const toggle= useSelector((state)=>state.auth.toggle)
-const [videoData, setVideoData] = useState([]); 
+function Home({ type }) {
+  const toggle = useSelector((state) => state.auth.toggle)
+  const [videoData, setVideoData] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     videoInstance.get(`/${type}`)
-         .then((res)=>{
-          setVideoData(res.data);
+      .then((res) => {
+        setVideoData(res.data);
 
-          console.log(res.data,"response");
-         })
-         .catch((err)=>{
-          console.log(err);
-         })
-  },[type])
+        console.log(res.data, "response");
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, [type])
 
   return (
-    <Container  style={{ padding: toggle ? ' 20px 20px 20px 140px':'20px 20px 20px 20px'}} >
-      {videoData && videoData.map((video)=>{
-        return(
+    <Container style={{ padding: toggle ? ' 20px 20px 20px 140px' : '20px 20px 20px 20px' }} >
+      {videoData && videoData.map((video) => {
+        return (
           <>
-        <Card  key={video?._id} video={video}/>
+            <Card key={video?._id} video={video} />
           </>
         )
       })}
-
-<ImageUploaderWithManualCrop />
     </Container>
   )
 }

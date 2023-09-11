@@ -11,10 +11,9 @@ import { useSelector } from 'react-redux';
 import Search from './pages/user/search/Search';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ImageUploaderWithManualCrop from './components/dummy';
 
 const Container = styled.div`
- display:flex
+ display:flex;
  `;
 
 const Main = styled.div`

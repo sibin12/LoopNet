@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
+
 import loopnet from '../../assets/loop.png'
 import {toggle} from '../../redux/authSlice'
 import './Navbar.scss'
@@ -100,6 +101,8 @@ function Navbar() {
   const navigate = useNavigate()
   const {user} =useSelector((state)=> state.auth)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
   const [q, setQ] = useState("")
    console.log(user,"user");
   const openModal = () => {
@@ -115,14 +118,15 @@ function Navbar() {
       dispatch(toggle())
   };
 
+
   return (
 <Container>
     <Wrapper>
                 <Logo >
-                   
                     <DehazeOutlinedIcon   onClick={toggleMenu}/>
+      <Link to={'/'}  style={{textDecoration:"none",  color: "inherit"}} >
                     <Img src={loopnet} />LoopNet
-                   
+      </Link>
                 </Logo>
   
   <Search>
@@ -131,6 +135,10 @@ function Navbar() {
     <SearchIcon onClick={()=>navigate(`/search?q=${q}`)} />
 
   </Search>
+ 
+ 
+
+
    <Button onClick={!user && openModal}>
           <AccountCircleIcon />
           {user ? user.username : "SIGN IN"}

@@ -29,14 +29,58 @@ padding: 5px;
 width:100%;
 `;
 
+
+
+
+
+const Details = styled.div`
+display: flex;
+flex-direction: row;
+// padding:10px;
+// gap: 25px;
+margin-left:50px;
+`;
+
+const Name = styled.span`
+font-size: 16px;
+font-weight:500;
+color: ${({theme})=>theme.text};
+
+`;
+
+const Date =styled.span`
+font-size: 11px;
+font-weight:400;
+margin-left:auto;
+`;
+
+const Cmnt = styled.div`
+display: flex;
+flex-direction: column;
+margin-left:20px;
+// gap: 10px;
+`;
+
+const Text = styled.span`
+display:flex;
+color: ${({theme})=>theme.text};
+font-size:14px;
+`;
+
+
 function Comments({videoId}) {
   const {user}= useSelector((state)=>state.auth);
   const [text, setText] = useState("")
   const [comments, setComments] = useState([])
+  const [replyText, setReplyText] = useState("")
+
+
+
   useEffect(()=>{
     commentInstance.get(`/${videoId}`)
     .then((res)=>{
       setComments(res.data)
+      console.log(comments, '💕💕💕💕')
     })
     .catch((err)=>{
       console.log(err.message);
@@ -57,6 +101,10 @@ function Comments({videoId}) {
       })
    }
 
+//    const handleReply =()=>{
+//     commentInstance.post(`/`)
+//  }
+
   
   return (
       <Container> 
@@ -66,10 +114,24 @@ function Comments({videoId}) {
                       <Inputs name='text' type="text" placeholder='Add a comment...' value={text} onChange={(e) => setText(e.target.value)}/>
                       <Button onClick={handleAddcomment}>add</Button>
         </NewComment>
+        
         {
           comments.map((comment)=>{
             return(
-              <Comment key={comment?._id} comment= {comment} />
+            <>
+              <Comment key={comment?._id} comment= {comment}  setComments={setComments} videoId ={videoId}/>
+              {/* <Details>
+          <Inputs
+          name="text"
+          type="text"
+          placeholder="Reply to this comment..."
+          value={replyText}
+          onChange={(e)=> setReplyText(e.target.value)}
+        />
+        <Button style={{width:'100px'}} onClick={handleReply} >Reply</Button>
+          </Details> */}
+            </>
+              
             )
           })
         }

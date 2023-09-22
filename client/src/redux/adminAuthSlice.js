@@ -17,7 +17,8 @@ export const adminAuthSlice = createSlice({
         adminLogout: (state) =>{
             state.admin = null
             state.adminToken = null
-            localStorage.clear()
+            // localStorage.clear()
+            localStorage.setItem("admintoken" , null)
         },
      
     }

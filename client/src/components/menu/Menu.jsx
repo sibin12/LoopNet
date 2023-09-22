@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import loopnet from '../../assets/loop.png'
 import HomeIcon from '@mui/icons-material/Home';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
@@ -17,7 +18,7 @@ import Upload from '../user/upload/Upload';
 const Container = styled.div`
 // flex:1;
 // background-color:${({theme}) =>theme.bg};
-background-color:transparent;
+background-color:whitesmoke;
 color:${({theme}) => theme.text};
 height:100vh;
 position:fixed;
@@ -26,6 +27,7 @@ z-index:2;
 `
 
 const Wrapper = styled.div`
+
 padding: 18px 26px;
 `
 
@@ -97,8 +99,8 @@ function Menu( {darkMode , setDarkMode} ) {
 
     return (
         <>
-        <Container>
-            <Wrapper style={{padding: toggle ? '18px 26px' : '0px 0px'}} >
+        <Container >
+            <Wrapper style={{padding: toggle ? '18px 10px' : '0px 0px'}} >
                 
 
              {toggle && (
@@ -116,6 +118,12 @@ function Menu( {darkMode , setDarkMode} ) {
                 <Item  onClick={()=> setOpen(true)} >
                 <CloudUploadIcon /> Upload
                 </Item>
+                    <Hr />
+                    <Link to="/chat" style={{textDecoration: 'none', color:'inherit'}} >
+                <Item  >
+                <ChatIcon /> Chat
+                </Item>
+                    </Link>
                     <Hr />
                 <Item>    
                     <SettingsIcon /> Setting

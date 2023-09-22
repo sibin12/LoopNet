@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { videoInstance } from '../../../utils/axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Card from '../../../components/user/card/Card'
+import ChatLoading from '../../../components/user/chat/ChatLoading'
 
 
 const Container = styled.div`
@@ -12,7 +13,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 20px 20px 20px 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 56px auto;
 
   @media (min-width: 687px) {
    align-items: center;
@@ -31,9 +32,12 @@ const Container = styled.div`
 
 
 function Home({ type }) {
+  // const dispatch = useDispatch()
+  const block  = useSelector((state) => state.video.block);
+  console.log(block,"❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️");
   const toggle = useSelector((state) => state.auth.toggle)
   const [videoData, setVideoData] = useState([]);
-
+   
   useEffect(() => {
     videoInstance.get(`/${type}`)
       .then((res) => {
@@ -45,7 +49,7 @@ function Home({ type }) {
         console.log(err);
       })
   }, [type])
-
+console.log(block,"block data");
   return (
     <Container style={{ padding: toggle ? ' 20px 20px 20px 140px' : '20px 20px 20px 20px' }} >
       {videoData && videoData.map((video) => {
@@ -55,6 +59,8 @@ function Home({ type }) {
           </>
         )
       })}
+
+      <ChatLoading />
     </Container>
   )
 }

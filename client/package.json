@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
@@ -18,10 +20,12 @@
     "@tanstack/react-query": "^4.32.6",
     "axios": "^1.4.0",
     "firebase": "^10.1.0",
+    "form-data": "^4.0.0",
     "material-icons": "^1.13.9",
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-dropdown": "^1.11.0",
     "react-image-crop": "^10.1.8",
     "react-query": "^3.39.3",
     "react-redux": "^8.1.2",

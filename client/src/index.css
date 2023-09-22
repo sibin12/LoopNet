@@ -1,3 +1,45 @@
+@keyframes colorChange {
+  0%{
+    background: rgb(237, 237, 237);
+  }
+  30%{
+    background: rgb(177, 177, 177);
+  }
+  50%{
+    background: rgb(111, 110, 110);
+  }
+  70%{
+    background:rgb(177, 177, 177);
+  }
+  100%{
+    background: rgb(244, 244, 244);
+  }
+}
+
+
+::-webkit-scrollbar{
+  width: 0px;
+}
+/* @keyframes colorChange {
+  0%{
+    background: rgb(199, 51, 71);
+  }
+  30%{
+    background: rgb(189, 37, 148);
+  }
+  50%{
+    background: rgb(70, 31, 210);
+  }
+  70%{
+    background:rgb(37, 190, 195);
+  }
+  100%{
+    background: rgb(130, 205, 32);
+  }
+} */
+
+
+
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState ={
     video:null,
+    block:false,
 }
 
 export const videoSlice = createSlice({
@@ -33,9 +34,15 @@ export const videoSlice = createSlice({
               );
             }
           },
+          block:(state)=>{
+            return {
+                ...state,
+                block: !state.block
+            };
+        }  ,
         },
       });
 
-export const {fetchSuccess, like, dislike} = videoSlice.actions
+export const {fetchSuccess, like, dislike, block} = videoSlice.actions
 
 export default videoSlice.reducer

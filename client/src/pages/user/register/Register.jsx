@@ -116,13 +116,17 @@ function Register() {
            // When you receive the token in the response
             const token = res.data.token;
             localStorage.setItem('token', token);
+            // localStorage.setItem('userInfo', res.data);
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
+
            dispatch(login(res.data))
 
            navigate('/')
           })
           .catch((err)=>{
-            if (err.response && err.response.status === 404) {
-              setRegisterErr('User not found! Please check your email.');
+            if (err.response) {
+              // setRegisterErr('User not found! Please check your email.');
+              setRegisterErr(err.response.data.message);
             } else {
               setRegisterErr('An error occurred while logging in. Please try again later.');
             }
@@ -186,6 +190,9 @@ function Register() {
               console.log(res.data , " response of register ");
               const token = res.data.token;
             localStorage.setItem('token', token);
+            // localStorage.setItem('userInfo', res.data);
+            localStorage.setItem("userInfo", JSON.stringify(res.data));
+
               dispatch(register(res.data))
               navigate('/')
              })

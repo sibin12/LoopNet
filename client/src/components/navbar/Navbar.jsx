@@ -1,21 +1,29 @@
-import React ,{useState}from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import loopnet from '../../assets/loop.png'
-import {toggle} from '../../redux/authSlice'
+import { logout, toggle } from '../../redux/authSlice'
 import './Navbar.scss'
-import { Link,  useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import RegisterModal from '../../pages/user/modal/RegisterModal';
-import { useSelector ,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+// import Dropdown from 'react-dropdown'
+import { createGlobalStyle } from 'styled-components';
+
+// import '../../style.css'
 
 const Container = styled.div`
-position: sticky;
+position: fixed;
+width:100%;
 top: 0;
 background-color:whitesmoke;
 height: 56px;
+ 
+// animation: colorChange 7s infinite;
+
 
 @media (max-width: 426px) {
   height:110px;
@@ -93,20 +101,56 @@ const Button = styled.button`
 const Img = styled.img`
 height:25px;
 padding-left:2px;
-`
+`;
+
+
+// Global styles to remove default list styles
+const GlobalStyles = createGlobalStyle`
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+const CustomDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  // overflow-x: visible;
+  display: ${props => (props.isOpen ? 'block' : 'none')};
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 1;
+  overflow-x: visible !important;
+
+
+  `;
+
+
+const DropdownItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
 
 
 function Navbar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {user} =useSelector((state)=> state.auth)
+  const { user } = useSelector((state) => state.auth)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State to control the dropdown visibility
 
   const [q, setQ] = useState("")
-   console.log(user,"user");
+  console.log(user, "user");
   const openModal = () => {
-     setIsModalOpen(true);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -115,41 +159,81 @@ function Navbar() {
   };
   const toggleMenu = () => {
     console.log("hi");
-      dispatch(toggle())
+    dispatch(toggle())
+
+  };
+
+
+  const toggleDropdown = () => {
+    // Toggle the dropdown visibility
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  // Sample options for the dropdown
+  const options = [
+    { label: 'Profile', value: 'profile' },
+    { label: 'Setting', value: 'setting' },
+    { label: 'Logout', value: 'logout' },
+  ];
+
+
+  const handleOptionClick = (optionValue) => {
+    if (optionValue === 'profile') {
+      setDropdownOpen(!isDropdownOpen);
+
+      navigate('/profile');
+    } else if (optionValue === 'setting') {
+      setDropdownOpen(!isDropdownOpen);
+
+      // navigate('/settings');
+    } else if (optionValue === 'logout') {
+      setDropdownOpen(!isDropdownOpen);
+      dispatch(logout())
+      navigate('/')
+    }
   };
 
 
   return (
-<Container>
-    <Wrapper>
-                <Logo >
-                    <DehazeOutlinedIcon   onClick={toggleMenu}/>
-      <Link to={'/'}  style={{textDecoration:"none",  color: "inherit"}} >
-                    <Img src={loopnet} />LoopNet
-      </Link>
-                </Logo>
-  
-  <Search>
+    <Container>
+      <Wrapper>
+        <Logo >
+          <DehazeOutlinedIcon onClick={toggleMenu} />
+          <Link to={'/'} style={{ textDecoration: "none", color: "inherit" }} >
+            <Img src={loopnet} />LoopNet
+          </Link>
+        </Logo>
 
-    <Input type='text' placeholder='SEARCH' onChange={(e)=>setQ(e.target.value)} />
-    <SearchIcon onClick={()=>navigate(`/search?q=${q}`)} />
+        <Search>
+          <Input type='text' placeholder='SEARCH' onChange={(e) => setQ(e.target.value)} />
+          <SearchIcon onClick={() => navigate(`/search?q=${q}`)} />
+        </Search>
 
-  </Search>
- 
- 
-
-
-   <Button onClick={!user && openModal}>
+        <Button onClick={!user && openModal}>
           <AccountCircleIcon />
           {user ? user.username : "SIGN IN"}
+          {user && <ArrowDropDownIcon onClick={toggleDropdown} />}
+
+          {/* Conditionally render the Dropdown component */}
+          <GlobalStyles />
+          {isDropdownOpen && (
+            <CustomDropdown isOpen={isDropdownOpen}>
+              <ul>
+                {options.map((option, index) => (
+                  <li key={index} >
+                    <DropdownItem onClick={() => handleOptionClick(option.value)}>
+                      {option.label}
+                    </DropdownItem>
+                  </li>
+                ))}
+              </ul>
+            </CustomDropdown>
+          )}
         </Button>
         <RegisterModal isOpen={isModalOpen && !user} onClose={closeModal} />
-
-
-</Wrapper>
-
+      </Wrapper>
     </Container>
   )
 }
-         
+
 export default Navbar

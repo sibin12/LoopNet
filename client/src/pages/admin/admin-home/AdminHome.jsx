@@ -6,9 +6,9 @@ import UserDetails from '../user-details/userDetails'
 function AdminHome() {
   return (
     <div>
-     <AdminNavbar /> 
-
-<UserDetails />
+     {/* <AdminNavbar />  */}
+     <h1>Welcome to home page </h1>
+{/* <UserDetails /> */}
     </div>
   )
 }

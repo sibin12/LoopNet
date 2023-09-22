@@ -4,6 +4,7 @@ import { styled } from 'styled-components'
 import loop from '../../../assets/loop.png'
 import {format} from "timeago.js";
 import { userInstance, videoInstance } from '../../../utils/axios';
+import { useSelector } from 'react-redux';
 
 
 const Container = styled.div`
@@ -63,27 +64,28 @@ color: ${({theme})=>theme.text}
 `
 
 function Card({type , video}) {
-  
+  const block = useSelector((state)=>state.video.block)
   const [user, setUser]=useState({})
 
   useEffect(()=>{
     userInstance.get(`/find/${video?.userId}`)
     .then((res)=>{
+      
       setUser(res.data)
     })
     .catch((err)=>{
       console.log(err.message);
     })
-  },[])
+  },[block])
 
 
   const handleViews =()=>{
      if(user){
 
-       console.log('views sssssssssssssss',video,"userssss",user);
-       videoInstance.put( `/view/${video._id}`,{userId: user._id})
+       console.log('views sssssssssssssss❤️❤️❤️❤️❤️❤️❤️❤️❤️',video,"userssss",user);
+       videoInstance.put( `/view/${video._id}`,{userId : user._id})
        .then((res)=>{
-         console.log(res,"res of views");
+         console.log(res,"res of views😎😎😎😎😎");
         })
         .catch((err)=>{
           console.log(err.message);

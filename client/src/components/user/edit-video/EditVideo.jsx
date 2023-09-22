@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 z-index:2;
 width:600px;
 height:auto;
-position:sticky;
+// position:sticky;
 top:20px;
 background-color:white;
 // background-color:lightblue;
@@ -37,7 +37,7 @@ background-color:white;
 padding:20px;
 flex-direction:column;
 gap:20px;
-position:relative;
+// position:relative;
  ` ;
 
 const Close = styled.div`
@@ -94,7 +94,7 @@ width:200px;
 height:150px;
 `
 
-function Upload({ setOpen }) {
+function EditVideo({ setOpen }) {
 
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate()
@@ -111,6 +111,29 @@ function Upload({ setOpen }) {
   const [scale, setScale] = useState(1);
   const [editor, setEditor] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null); // New state for cropped image
+
+const [videos,setVideos] =useState(null)
+
+console.log(setOpen,"😊😊😊");
+
+useEffect(()=>{
+    videoInstance.get(`/find/${setOpen}`)
+    .then((res)=>{
+        setVideos(res.data)
+        console.log("😊😊😊😊😊");
+        setSelectedImage(res.data?.imgUrl)
+        // setCroppedImage(res.data?.imgUrl)
+    })
+    .catch((err)=>{
+        console.log(err.message);
+    })
+},[])
+
+
+
+
+
+
 
 
   // handling the titile,desc
@@ -234,7 +257,7 @@ function Upload({ setOpen }) {
     videoInstance.post('/', { ...inputs, user, tags })
       .then((res) => {
         console.log(res.data, "response data in uploading");
-        setOpen(false)
+        setOpen(null)
         if (res.status === 200) {
           navigate(`/video/${res.data._id}`);
         }
@@ -244,18 +267,12 @@ function Upload({ setOpen }) {
       })
   }
 
-  const handleDelete = () => {
-    console.log("delete the image");
-    setImg("")
-    setImgPerc("")
-    setSrc("")
-  }
 
   return (
     <Container>
       <Wrapper>
-        <Close onClick={() => setOpen(false)}><CloseIcon /></Close>
-        <Title>Upload a new video</Title>
+        <Close onClick={() => setOpen(null)}><CloseIcon /></Close>
+        <Title>Edit the video</Title>
         <Label>video:</Label>
         {videoPerc > 0 ? ("Uploading:" + videoPerc + "%") :
           (
@@ -263,16 +280,16 @@ function Upload({ setOpen }) {
               accept='video/*'
               onChange={(e) => setVideo(e.target.files[0])}
             />
-          )}
+          )} 
         <Input type='text' placeholder='Title'
-          name='title'
+          name='title' value={videos?.title}
           onChange={handleChange}
         />
         <Desc placeholder='Description' rows={8}
-          name='desc'
+          name='desc' value={videos?.desc}
           onChange={handleChange}
         />
-        <Input type='text' placeholder='Separate the tags with commas.'
+        <Input type='text' placeholder='Separate the tags with commas.' value={videos?.tags}
           onChange={handleTags}
         />
         <Label>thumbail image: {imgPerc > 0 ? ("Uploading:" + imgPerc + "%") : "0%"}</Label>
@@ -302,7 +319,7 @@ function Upload({ setOpen }) {
               <Button onClick={handleSave}>Save Crop</Button>
             </div>
           )}
-
+           
           {croppedImage && (
             <div>
               <Label>Cropped Image:</Label>
@@ -321,4 +338,4 @@ function Upload({ setOpen }) {
   )
 }
 
-export default Upload;
+export default EditVideo;

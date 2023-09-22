@@ -6,6 +6,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ShareIcon from '@mui/icons-material/Share';
+import FlagIcon from '@mui/icons-material/Flag';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import Comments from '../../../components/user/coments/Comments';
 import Card from '../../../components/user/card/Card';
@@ -16,11 +17,13 @@ import axios from "axios";
 import { dislike, fetchSuccess, like } from "../../../redux/videoSlice";
 import { userInstance, videoInstance } from '../../../utils/axios';
 import { toast } from 'react-toastify';
-
+import { subscription } from '../../../redux/authSlice';
+import VideoReportButton from '../../../components/user/report/Report';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 56px auto;
   padding: 10px 0px 5px 15px;
 
   @media (min-width: 768px) {
@@ -161,11 +164,12 @@ margin:5px;
 function Video() {
     const { user } = useSelector((state) => state.auth);
     const { currentVideo } = useSelector((state) => state.video);
+    const  block  = useSelector((state) => state.video.block);
     const dispatch = useDispatch();
     const [userName, setUserName] = useState({})
 
     const [anchorEl, setAnchorEl] = useState(null);
-
+ const [reportModal, setReportModal] = useState(false)
   
     const path = useLocation().pathname.split("/")[2];
 
@@ -176,6 +180,7 @@ function Video() {
             dispatch(fetchSuccess(res.data))
         })
         .catch((err)=>{
+          toast.error(err.message )
             console.log(err);
         })
 
@@ -184,12 +189,14 @@ function Video() {
             console.log("userdetails",res.data);
             setUserName(res.data)
         }).catch((err)=>{
+            
             console.log("username error",err.message);
         })
-    },[path, dispatch])
+    },[path, dispatch , block])
 
     const handleLike = async ()=>{
         await userInstance.put(`/like/${currentVideo._id}`)
+
          dispatch(like(user._id))
     }
 
@@ -243,6 +250,22 @@ function Video() {
   handleClose();
     };
   
+ // handling subscription ,,
+
+  const handleSubscribe =()=>{
+    console.log(user,"userName?._Diid",userName.username);
+    user?.subscribedUsers?.includes(userName?._id)
+    ? userInstance.put(`/unsub/${userName._id}`)
+    : userInstance.put(`/sub/${userName._id}`)
+          dispatch(subscription(userName?._id));
+  }
+
+
+  const handleReport = ()=>{
+     setReportModal(!reportModal)
+  }
+
+
 
   return (
     <Container>
@@ -255,24 +278,25 @@ function Video() {
               <Info>{currentVideo?.views?.length}views   {format(currentVideo?.createdAt)}</Info> 
               <Buttons>
               <Button onClick={handleLike}>
-              {currentVideo.likes?.includes(user?._id) ? (
+              {currentVideo?.likes?.includes(user?._id) ? (
                 <ThumbUpIcon />
               ) : (
                 <ThumbUpOutlinedIcon />
               )}{" "}
-              {currentVideo.likes?.length}
+              {currentVideo?.likes?.length}
             </Button>
             <Button onClick={handleDislike}>
-              {currentVideo.dislikes?.includes(user?._id) ? (
+              {currentVideo?.dislikes?.includes(user?._id) ? (
                 <ThumbDownIcon />
               ) : (
                 <ThumbDownOffAltOutlinedIcon />
               )}{" "}
               Dislike
             </Button>
-                <Button><LibraryAddIcon /> Save </Button>
+                {/* <Button><LibraryAddIcon /> Save </Button> */}
+                <Button onClick={handleReport}><FlagIcon /> Report </Button>
+                {reportModal && <VideoReportButton videoId={currentVideo._id} />}
                 <Button onClick={handleShareClick}><ShareIcon /> Share </Button>
-          
             <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -297,13 +321,17 @@ function Video() {
                         <UserCounter>{userName?.subscribers}subscribers</UserCounter>
                         <Description>{userName?.desc}</Description>
                     </UserDetail>
-                        <Subscribe>subscribe</Subscribe>
+                        <Subscribe onClick={handleSubscribe}>
+                        {user?.subscribedUsers?.includes(userName?._id)
+              ? "SUBSCRIBED"
+              : "SUBSCRIBE"}
+                          </Subscribe>
                 </UserInfo>
             </User>
             < Hr />
-            <Comments  videoId ={currentVideo._id} />
+            <Comments  videoId ={currentVideo?._id} />
         </Content>
-        <Recommendation  tags ={currentVideo.tags}>
+        <Recommendation  tags ={currentVideo?.tags}>
           <Wrapper>
             <Card type="sm"/>
             <Card type="sm"/>

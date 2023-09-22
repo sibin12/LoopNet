@@ -9,6 +9,7 @@ import { videoInstance } from "../../../utils/axios";
 const Container = styled.div`
 display: flex;
 justify-content: space-around;
+margin: 50px 0;
 flex-wrap:wrap;
 `
 
@@ -20,7 +21,7 @@ const Search = () => {
   
      videoInstance.get(`/search${query}`)
      .then((res)=>{
-        console.log(res.data,"search results❤️❤️❤️❤️");
+        console.log(res.data,"search results");
          setVideos(res.data);
      })
     

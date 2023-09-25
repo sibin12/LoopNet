@@ -3,7 +3,7 @@ import Menu from './components/menu/Menu';
 import Navbar from './components/navbar/Navbar';
 import { darkTheme, lightTheme } from './utils/Theme';
 import { useState } from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/user/home/Home';
 import Video from './pages/user/video/Video';
 import Register from './pages/user/register/Register';
@@ -22,7 +22,7 @@ const Container = styled.div`
 
 const Main = styled.div`
 flex:7;
-background-color: ${({theme}) => theme.bgLighter};
+background-color: ${({ theme }) => theme.bgLighter};
 color: black;
 overflow:hidden;
 `;
@@ -35,42 +35,44 @@ function App() {
 
   const [darkMode, setDarkMode] = useState(false)
   const { user } = useSelector((state) => state.auth);
-  
-   return (
+
+  return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
 
-          <BrowserRouter>
-            <Navbar />
+      <BrowserRouter>
+        <Navbar />
         <Container>
-          <Menu  darkMode={darkMode} setDarkMode={setDarkMode} />
+          <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
           <Main>
             <Wrapper>
-
-              
               <Routes>
                 <Route path='/'>
                   <Route index element={<Home type="random" />} />
                   <Route path="trends" element={<Home type="trend" />} />
                   <Route path="search" element={<Search />} />
-                  
-                  <Route path="subscriptions" element={<Home type="sub" />} />
-                  <Route path="profile" element={<Profile />} />
-                  <Route path="chat" element={<Chat />} />
-                  
-                  <Route path="register" element={ <Register />} />
+
+                  {/* private routes */}
+                  <Route element={<VerifyUser />}>
+                    <Route path="subscriptions" element={<Home type="sub" />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="chat" element={<Chat />} />
+                  </Route>
+
+                  <Route path="register" element={<Register />} />
                   <Route path='video' >
                     <Route path=':id' element={<Video />} />
                   </Route>
                 </Route>
-                <Route path='*' element={ <NotFoundPage />}  />
+
+                <Route path='*' element={<NotFoundPage />} />
               </Routes>
             </Wrapper>
           </Main>
         </Container>
-          </BrowserRouter>
-        <ToastContainer />
+      </BrowserRouter>
+      <ToastContainer />
     </ThemeProvider>
-   )
+  )
 }
 
 export default App

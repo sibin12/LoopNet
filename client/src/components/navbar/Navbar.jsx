@@ -146,7 +146,7 @@ function Navbar() {
   const { user } = useSelector((state) => state.auth)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // State to control the dropdown visibility
-
+  console.log(user,'❤️❤️');
   const [q, setQ] = useState("")
   console.log(user, "user");
   const openModal = () => {

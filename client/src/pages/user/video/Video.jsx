@@ -184,14 +184,14 @@ function Video() {
             console.log(err);
         })
 
-        userInstance.get(`/find/${currentVideo.userId}`)
-        .then((res)=>{
-            console.log("userdetails",res.data);
-            setUserName(res.data)
-        }).catch((err)=>{
+        // userInstance.get(`/find/${currentVideo.userId}`)
+        // .then((res)=>{
+        //     console.log("userdetails",res.data);
+        //     setUserName(res.data)
+        // }).catch((err)=>{
             
-            console.log("username error",err.message);
-        })
+        //     console.log("username error",err.message);
+        // })
     },[path, dispatch , block])
 
     const handleLike = async ()=>{
@@ -253,11 +253,11 @@ function Video() {
  // handling subscription ,,
 
   const handleSubscribe =()=>{
-    console.log(user,"userName?._Diid",userName.username);
-    user?.subscribedUsers?.includes(userName?._id)
-    ? userInstance.put(`/unsub/${userName._id}`)
-    : userInstance.put(`/sub/${userName._id}`)
-          dispatch(subscription(userName?._id));
+    console.log(user?.subscribedUsers,"userName?._Diid",currentVideo?.userId?._id);
+    user?.subscribedUsers?.includes(currentVideo?.userId?._id)
+    ? userInstance.put(`/unsub/${currentVideo?.userId?._id}`)
+    : userInstance.put(`/sub/${currentVideo?.userId?._id}`)
+          dispatch(subscription(currentVideo?.userId?._id));
   }
 
 
@@ -317,12 +317,11 @@ function Video() {
                 <UserInfo>
                     <Image />
                     <UserDetail>
-                        <UserName>{userName?.username}</UserName>
-                        <UserCounter>{userName?.subscribers}subscribers</UserCounter>
-                        <Description>{userName?.desc}</Description>
+                        <UserName>{currentVideo?.userId?.username}</UserName>
+                        <UserCounter>{currentVideo?.userId?.subscribers}subscribers</UserCounter>
                     </UserDetail>
                         <Subscribe onClick={handleSubscribe}>
-                        {user?.subscribedUsers?.includes(userName?._id)
+                        {user?.subscribedUsers?.includes(currentVideo?.userId?._id)
               ? "SUBSCRIBED"
               : "SUBSCRIBE"}
                           </Subscribe>

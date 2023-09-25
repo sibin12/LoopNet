@@ -14,14 +14,13 @@ const ChatProvider = ({children}) =>{
         
         const userInfo = localStorage.getItem("userInfo");
         // JSON.parse(userInfo)
-        console.log(userInfo,"userdetails  from context");
          setUser(userInfo)
         // if (!userInfo) {
         //   navigate("/");
         // }
       }, []);
 
-    return (
+    return ( 
     <ChatContext.Provider
     value={{
         selectedChat,

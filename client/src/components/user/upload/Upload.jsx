@@ -15,23 +15,24 @@ import AvatarEditor from 'react-avatar-editor';
 
 const Container = styled.div`
 width:100%;
-height:100%;
-position:fixed;
+// height:100%;
+// position:fixed;
 top:0;
 left:0;
 background-color:#000000a7;
 display:flex;
 align-items:center;
 justify-content: center;
+
 `
 const Wrapper = styled.div`
 z-index:2;
 width:600px;
 height:auto;
-position:sticky;
+// position:sticky;
 top:20px;
 background-color:white;
-// background-color:lightblue;
+background-color:lightblue;
 // background-color:${({ theme }) => theme.bgLighter};
 // color:${({ theme }) => theme.text};
 padding:20px;
@@ -206,9 +207,8 @@ function Upload({ setOpen }) {
       canvas.toBlob((blob) => {
         if (blob) {
           const file = new File([blob], 'cropped_image.png', { type: 'image/png' });
-          setImg(file); // Update the cropped image state with a File object
+          setImg(file);
 
-          // Create a data URL for the cropped image and set it in a separate state
           const dataURL = URL.createObjectURL(file);
           setCroppedImage(dataURL);
         }

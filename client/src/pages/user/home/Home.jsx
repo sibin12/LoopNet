@@ -41,6 +41,7 @@ function Home({ type }) {
   useEffect(() => {
     videoInstance.get(`/${type}`)
       .then((res) => {
+        // setVideoData([]);
         setVideoData(res.data);
 
         console.log(res.data, "response");
@@ -60,7 +61,7 @@ console.log(block,"block data");
         )
       })}
 
-      <ChatLoading />
+      {/* <ChatLoading /> */}
     </Container>
   )
 }

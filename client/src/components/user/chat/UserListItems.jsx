@@ -51,7 +51,7 @@ const UserListItem = ({ handleFunction, user }) => {
 
     <ListItem onClick={handleFunction}>
       <AvatarImage
-        src={user?.image}
+        src={`http://localhost:5000/images/profile/${user?.image}`}
         alt={user?.username}
         />
       <InfoContainer>

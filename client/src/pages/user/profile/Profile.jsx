@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import {  userInstance, videoInstance } from '../../../utils/axios';
-import formData from 'form-data'
+import { userInstance, videoInstance } from '../../../utils/axios';
 import { toast } from 'react-toastify';
 import EditIcon from '@mui/icons-material/Edit';
 // import EditVideo from '../../../components/user/edit-video/EditVideo';
 import EditVideo from '../../../components/user/edit-video/EditVideo/'
+import { Hidden } from '@mui/material';
+import { updateUser } from '../../../redux/authSlice';
+import { validateImageFile } from '../../../utils/Validation'
 const Container = styled.div`
 
 @media (max-width: 484px) {
@@ -36,20 +38,18 @@ const CoverPhoto = styled.img`
 `;
 
 const ProfileImage = styled.img`
-  max-width: 200px;
-  max-height: 200px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   margin-top: -100px;
   border: 5px solid #fff;
   cursor: pointer;
-
   
-  @media (max-width: 484px){
-    max-width:150px;
-    max-height:150px;
+  @media (max-width: 484px) {
+    max-width: 150px;
+    max-height: 150px;
   }
-
 `;
 
 const UserName = styled.h1`
@@ -66,9 +66,6 @@ const UserBio = styled.p`
 
 
 
-const HiddenFileInput = styled.input`
-  display: none;
-`;
 
 const NavBar = styled.div`
   display: flex;
@@ -98,12 +95,17 @@ margin-top:50px;
 width:70vw;
 `;
 
+
+const tableContainer =styled.div`
+ overflow:auto;
+ `
+
 const VideosTable = styled.table`
   width: 80%;
+  // width: 900px;
   border-collapse: collapse;
-  margin-top: 20px;
-
- 
+  margin-top: 20px; 
+  overflow: auto;
 `;
 
 const TableHeader = styled.thead`
@@ -122,12 +124,12 @@ const TableRow = styled.tr`
 `;
 
 const TableHeaderCell = styled.th`
-  padding: 10px;
+  padding: 5px;
   text-align: left;
 `;
 
 const TableCell = styled.td`
-  padding: 10px;
+  padding: 5px;
   text-align: left;
   
 `;
@@ -140,11 +142,9 @@ min-height:70px;
 `;
 
 
-const fileInputStyle = {
-    display: 'none',
-  };
-  
-const TableVisible = styled.span`
+
+
+const TableVisible = styled.td`
  
 @media (max-width:484px){
     display:none;
@@ -155,115 +155,135 @@ const TableVisible = styled.span`
 const Profile = () => {
   const toggle = useSelector((state) => state.auth.toggle);
   const { user } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [photo, setPhoto] = useState('')
+  const [coverImage, setCoverImage] = useState('')
 
-  const fileInputRef = useRef(null);
-  const [selectedProfileImage, setSelectedProfileImage] = useState(null);
-  const [selectedCoverImage, setSelectedCoverImage] = useState(null);
 
-  const handleImageClick = (e) => {
-    // Trigger the file input when a profile image or cover image container is clicked
-    fileInputRef.current.name = e.currentTarget.getAttribute('data-fieldname');
-    fileInputRef.current.click();
-  };
-  
+  const handleUpdateProfile = async (photo, inputName) => {
+    let filename = null;
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    console.log(file,"file for image uploding");
-    if (file) {
-      const formData = new FormData();
-      // Get the field name from the clicked element's data-fieldname attribute
-    const fieldName = e.target.getAttribute('data-fieldname');
-     alert(fieldName)
-    // Append the file to the FormData with the correct field name
-    formData.append(fieldName, file);
+    try {
+      if (photo) {
+        console.log("image uploading");
+        const formData = new FormData()
+        filename = crypto.randomUUID() + photo.name
+        formData.append('filename', filename)
+        formData.append('image', photo)
 
-    console.log('FormData content:');
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
-    //   formData.append(e.target.name, file);
-    console.log(formData,"😊😊😊😊");
-      try {
-         
-        userInstance.post('/upload-image',{formData},{
-        headers: {
+        formData.append('input', inputName)
+
+
+        const { data } = await userInstance.post(`/upload`, formData, {
+          headers: {
             'Content-Type': 'multipart/form-data',
           },
         })
 
+        console.log(data.user, "😎😎😎😎😎😎");
 
-        // if (response.status === 201) {
-        //     // Handle a successful upload and update the selected image state
-        //     if (e.target.name === 'profileImage') {
-        //       setSelectedProfileImage(URL.createObjectURL(file));
-        //     } else if (e.target.name === 'coverImage') {
-        //       setSelectedCoverImage(URL.createObjectURL(file));
-        //     }
-        //   } else {
-        //     // Handle an error response
-        //     toast.error('Image upload failed:');
-        //     console.error('Image upload failed:', response.data);
-        //   }
-      } catch (error) {
-        console.log(error.message);
+        dispatch(updateUser(data.user))
+        console.log(user);
+
       }
-
-
-
-    }
-} 
-  const [selectedTab, setSelectedTab] = useState('uploaded'); // 'uploaded' or 'saved'
-// Example video data
- const [videos, setVideos ]= useState([])
-useEffect(() => {
-    try {
- videoInstance.get(`/find-videos/${user?._id}`)
- .then((res)=>{
-    setVideos(res.data)
- })
     } catch (error) {
-        toast.error(error.message)
+      console.log(error.message);
     }
-}, [])
+  }
 
-const [videoOpen, setVideoOpen] = useState(null)
-const handleVideos = (videoId)=>{
+
+  const handleProfilePictureChange = (e) => {
+    if (!validateImageFile(e.target.files[0])) {
+      return
+    }
+    setPhoto('')
+    setPhoto(e.target.files[0])
+    handleUpdateProfile(e.target.files[0], e.target.name)
+  };
+
+  // handleUpdateCoverImage
+  const handleCoverImageChange = (e) => {
+    if (!validateImageFile(e.target.files[0])) {
+      return
+    }
+    setCoverImage('')
+    setCoverImage(e.target.files[0])
+    handleUpdateProfile(e.target.files[0], e.target.name)
+  }
+
+
+  const [selectedTab, setSelectedTab] = useState('uploaded'); // 'uploaded' or 'saved'
+
+  const [videos, setVideos] = useState([])
+  useEffect(() => {
+    try {
+      videoInstance.get(`/find-videos/${user?._id}`)
+        .then((res) => {
+          setVideos(res.data)
+        })
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }, [])
+
+  const [videoOpen, setVideoOpen] = useState(null)
+  const handleVideos = (videoId) => {
     setVideoOpen(videoId)
-}
-
-
+  }
 
   return (
     < Container style={{ marginLeft: toggle ? '200px' : '60px' }} >
-    <ProfileContainer>
-   
-      <div  data-fieldname="coverImage"
-          onClick={handleImageClick} >
+      <ProfileContainer>
 
-      <CoverPhoto src="https://via.placeholder.com/1200x300" alt="Cover Photo"  />
-      </div>
+        <div data-fieldname="coverImage">
+          <label htmlFor='cover-image'>
+            <CoverPhoto src={coverImage && URL.createObjectURL(coverImage) ||
+              `http://localhost:5000/images/profile/${user?.coverImage}`
+            }
+              alt="Cover Photo" />
+          </label>
+          <input
+            type='file'
+            name='cover-image'
+            id='cover-image'
+            style={{ display: 'none' }}
+            onChange={handleCoverImageChange}
+          />
 
-      <div  data-fieldname="profileImage"
-          onClick={handleImageClick}>
-      <ProfileImage
-        src="https://via.placeholder.com/200"alt="Profile" data-fieldname="profileImage"/>
         </div>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleImageChange}
-          style={fileInputStyle}
-        />
-    
-      <UserName>
-        {user?.username} <BorderColorIcon  />
-      </UserName>
-      <UserBio>subscribers: {user?.subscribers}</UserBio>
-    </ProfileContainer>
 
-    <NavBar   >
+        <div data-fieldname="profileImage">
+          <label htmlFor='photo'>
+            <ProfileImage
+              src={photo && URL.createObjectURL(photo) ||
+
+                `http://localhost:5000/images/profile/${user?.image}`
+
+              }
+            />
+          </label>
+          <input
+            type='file'
+            name='profile'
+            id='photo'
+            style={{ display: 'none' }}
+            onChange={handleProfilePictureChange}
+          />
+        </div>
+
+
+        <UserName>
+          {user?.username} <BorderColorIcon  onClick={()=>toast.info("currently you cann't edit🤖")}/>
+        </UserName>
+        <UserBio>subscribers: {user?.subscribers}</UserBio>
+      </ProfileContainer>
+
+
+
+
+
+      <NavBar   >
         <NavItem
           onClick={() => setSelectedTab('uploaded')}
           style={{ backgroundColor: selectedTab === 'uploaded' ? '#0056b3' : '' }}
@@ -274,43 +294,84 @@ const handleVideos = (videoId)=>{
           onClick={() => setSelectedTab('saved')}
           style={{ backgroundColor: selectedTab === 'saved' ? '#0056b3' : '' }}
         >
-          Saved Videos
+          Liked Videos
         </NavItem>
       </NavBar>
-        <Hr />
+      <Hr />
+  <tableContainer>
 
-         {/* Render videos in a table */}
+      {/* Render videos in a table */}
       {selectedTab === 'uploaded' && (
+
         <VideosTable>
           <TableHeader>
             <TableRow>
               <TableHeaderCell>Videos</TableHeaderCell>
               <TableHeaderCell>Title</TableHeaderCell>
-              <TableVisible>
-              <TableHeaderCell>desc</TableHeaderCell>
-              <TableHeaderCell>Views</TableHeaderCell>
-              <TableHeaderCell></TableHeaderCell>
-              </TableVisible>
+              {/* <TableVisible> */}
+                <TableHeaderCell>desc</TableHeaderCell>
+                <TableHeaderCell>Views</TableHeaderCell>
+                <TableHeaderCell>Likes</TableHeaderCell>
+                <TableHeaderCell>Dislikes</TableHeaderCell>
+              {/* </TableVisible> */}
             </TableRow>
           </TableHeader>
           <tbody>
             {videos.map((video, index) => (
-              <TableRow key={index}  onClick={()=> handleVideos(video?._id)}>
-                <TableCell> <VideosDisplay  src={video?.imgUrl} /> </TableCell>
+              <TableRow key={index} 
+              // onClick={() => handleVideos(video?._id)}
+              >
+              <TableCell> <VideosDisplay src={video?.imgUrl} /> </TableCell>
                 <TableCell>{video?.title}</TableCell>
-                <TableVisible>
-                <TableCell>{video?.desc}</TableCell>
-                <TableCell>{video?.views?.length}</TableCell>
-                </TableVisible>
-                
+                {/* <TableVisible> */}
+                  <TableCell>{video?.desc.slice(0, 17)}..</TableCell>
+                  <TableCell>{video?.views?.length}</TableCell>
+                  <TableCell>{video?.likes?.length}</TableCell>
+                  <TableCell>{video?.dislikes?.length}</TableCell>
+                {/* </TableVisible> */}
+
               </TableRow>
             ))}
           </tbody>
         </VideosTable>
-
-
 )}
-{videoOpen && ( <EditVideo setOpen={videoOpen} />)}
+
+{selectedTab === 'saved' && (
+
+<VideosTable>
+  <TableHeader>
+    <TableRow>
+      <TableHeaderCell>Videos</TableHeaderCell>
+      <TableHeaderCell>Title</TableHeaderCell>
+      {/* <TableVisible> */}
+        <TableHeaderCell>desc</TableHeaderCell>
+        <TableHeaderCell>Views</TableHeaderCell>
+        <TableHeaderCell>Likes</TableHeaderCell>
+        <TableHeaderCell>Dislikes</TableHeaderCell>
+      {/* </TableVisible> */}
+    </TableRow>
+  </TableHeader>
+  <tbody>
+    {videos.map((video, index) => (
+      <TableRow key={index} 
+      onClick={() => handleVideos(video?._id)}
+      >
+      <TableCell> <VideosDisplay src={video?.imgUrl} /> </TableCell>
+        <TableCell>{video?.title}</TableCell>
+        {/* <TableVisible> */}
+          <TableCell>{video?.desc.slice(0, 17)}..</TableCell>
+          <TableCell>{video?.views?.length}</TableCell>
+          <TableCell>{video?.likes?.length}</TableCell>
+          <TableCell>{video?.dislikes?.length}</TableCell>
+        {/* </TableVisible> */}
+
+      </TableRow>
+    ))}
+  </tbody>
+</VideosTable>
+)}
+</tableContainer>
+      {videoOpen && (<EditVideo setOpen={videoOpen} />)}
     </Container>
   );
 };

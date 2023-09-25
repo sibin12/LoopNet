@@ -111,9 +111,17 @@ function Menu( {darkMode , setDarkMode} ) {
                 </Item>
                 </Link>
                     <Hr />
+                    <Link to="/subscriptions" style={{textDecoration: 'none', color:'inherit'}} >
                 <Item>
                 <SubscriptionsIcon />Subscription
                 </Item>
+                    </Link>
+                    <Hr />
+                    <Link to="/trends" style={{textDecoration: 'none', color:'inherit'}} >
+                <Item>
+                <SubscriptionsIcon />Trending
+                </Item>
+                    </Link>
                     <Hr />
                 <Item  onClick={()=> setOpen(true)} >
                 <CloudUploadIcon /> Upload

@@ -4,13 +4,8 @@ const adminToken = localStorage.getItem('admintoken')
 
 const userInstance = axios.create({
     baseURL:"http://localhost:5000/users",
-    // timeout:2000,
-    // withCredentials:true,
-    // headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     Accept:"application/json"
-    // }
 })
+
 const authInstance = axios.create({
     baseURL:"http://localhost:5000/auth",
     withCredentials: true,
@@ -20,31 +15,21 @@ const authInstance = axios.create({
 })
 const videoInstance = axios.create({
     baseURL:"http://localhost:5000/video",
-    // timeout:2000,
-    // withCredentials:true,
-    // headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     Accept:"application/json"
-    // }
+
 })
 const commentInstance = axios.create({
     baseURL:"http://localhost:5000/comments",
-    // timeout:2000,
-    // withCredentials:true,
-    // headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     Accept:"application/json"
-    // }
+
 })
+
 const chatInstance = axios.create({
     baseURL:"http://localhost:5000/chat",
-    // timeout:2000,
-    // withCredentials:true,
-    // headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     Accept:"application/json"
-    // }
 })
+
+const messageInstance = axios.create({
+    baseURL:"http://localhost:5000/message",
+})
+
 const adminAuthInstance = axios.create({
     baseURL:"http://localhost:5000/admin",
    
@@ -54,11 +39,7 @@ const adminAuthInstance = axios.create({
 })
 const adminInstance = axios.create({
     baseURL:"http://localhost:5000/admin",
-   
-    // headers: {
-    //     Authorization: `Bearer ${adminToken}`,
-    //     Accept:"application/json"
-    // }
+
 })
 
 
@@ -75,6 +56,7 @@ const setAuthorizationHeader = (config) => {
   videoInstance.interceptors.request.use(setAuthorizationHeader);
   commentInstance.interceptors.request.use(setAuthorizationHeader);
   chatInstance.interceptors.request.use(setAuthorizationHeader);
+  messageInstance.interceptors.request.use(setAuthorizationHeader);
   
 
 
@@ -91,4 +73,4 @@ const setAuthorizationHeader = (config) => {
   adminInstance.interceptors.request.use(setAdminAuthorizationHeader);
 
 
-export {userInstance , authInstance , videoInstance , commentInstance, chatInstance, adminAuthInstance, adminInstance};
+export {userInstance , authInstance , videoInstance , commentInstance, chatInstance, messageInstance, adminAuthInstance, adminInstance};

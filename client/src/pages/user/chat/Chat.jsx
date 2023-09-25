@@ -9,12 +9,12 @@ import UserListItem from '../../../components/user/chat/UserListItems';
 import SearchUser from '../../../components/user/chat/SearchUser';
 import LoadingSpinner from '../../../components/user/chat/Spinner';
 import { ChatState } from '../../../Context/ChatProvider';
-import { getSender } from '../../../utils/ChatLogin';
+import { getSender, getSenderImage } from '../../../utils/ChatLogin';
 import AddIcon from '@mui/icons-material/Add';
 import GroupChatModal from '../../../components/user/chat/GroupChatModal';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UpdateGroupChatModal from '../../../components/user/chat/UpdateGroupChatModal';
-
+import SingleChat from "../../../components/user/chat/SingleChat"
 
 const Container = styled.div`
   display: grid;
@@ -166,7 +166,10 @@ const ChatSectionHeading = styled.div`
   padding: 10px 16px;
   background-color: whitesmoke;
   font-weight: 600;
+  overflow-y: hidden;
+
   font-size: 26px;
+
   margin: 0;
 `;
 
@@ -182,11 +185,12 @@ const Button = styled.button`
 `;
 
 function Chat({ fetchAgain }) {
+  const {user} =useSelector((state)=>state.auth)
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [loggedUser, setLoggedUser] = useState();
   const [edit ,setEdit] = useState(false)
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const { selectedChat, setSelectedChat,  chats, setChats } = ChatState();
 
   const [open, setOpen] = useState(false);
 
@@ -210,6 +214,7 @@ function Chat({ fetchAgain }) {
   const fetchChats = async () => {
     try {
       const { data } = await chatInstance.get('/');
+      console.log(data,"😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎😎");
       setChats(data);
     } catch (error) {
       toast.error(error.message || 'Failed to load chats');
@@ -217,11 +222,11 @@ function Chat({ fetchAgain }) {
   };
 
   useEffect(() => {
-    setLoggedUser(localStorage.getItem('userInfo'));
+    setLoggedUser(user);
     fetchChats();
   }, [fetchAgain]);
 
-  const [group, setGroup] = useState(false);
+  // const senderName = getSender(loggedUser, chat?.users);
        
   return (
     <>
@@ -263,11 +268,12 @@ function Chat({ fetchAgain }) {
 
                 {!chat?.isGroupChat ? (
                   <>
+                   
                     <UserImage
-                      src={chat?.users[0]?.image}
-                      alt={chat?.users[0]?.username}
-                    />
-                    <Username>{chat?.users[0]?.username}</Username>
+                      src={`http://localhost:5000/images/profile/${getSenderImage(loggedUser,chat?.users)}`}
+                      alt={`http://localhost:5000/images/profile/${getSenderImage(loggedUser,chat?.users)}`} />
+
+                    <Username> {getSender(loggedUser, chat?.users) }</Username>
                   </>
                 ) : (
                   <Username>{chat?.chatName}   </Username>
@@ -281,13 +287,15 @@ function Chat({ fetchAgain }) {
         <ChatSection>
           {loadingChat && <LoadingSpinner />}
           {selectedChat && (
+            <>
   <ChatSectionHeading>
     {!selectedChat.isGroupChat ? (
       <>
         <UserImage
-          src={selectedChat?.users[0]?.image}
+          src={`http://localhost:5000/images/profile/${selectedChat?.users[0]?.image}`}
+          
           alt={selectedChat?.users[0]?.username}
-        />
+          />
         {selectedChat?.users[0]?.username}
       </>
     ) : (
@@ -299,7 +307,11 @@ function Chat({ fetchAgain }) {
       </>
     )}
   </ChatSectionHeading>
+ <SingleChat />
+    </>
+ 
 )}
+
 
         </ChatSection>
       </Container>

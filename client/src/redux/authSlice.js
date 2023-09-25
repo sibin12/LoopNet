@@ -24,6 +24,9 @@ export const authSlice = createSlice({
             // localStorage.clear()
             localStorage.setItem('token',null)
         },
+        updateUser(state,action){
+          state.user = action.payload
+        },
         toggle:(state)=>{
             return {
                 ...state,
@@ -66,6 +69,6 @@ export const authSlice = createSlice({
     }
 })
 
-export const {login, register, logout , toggle ,subscription} = authSlice.actions
+export const {login, register, updateUser, logout , toggle ,subscription} = authSlice.actions
 
 export default authSlice.reducer

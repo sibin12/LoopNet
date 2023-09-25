@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 
 const Container = styled.div`
 width:270px;
-background-color:whitesmoke;
+// background-color:whitesmoke;
 margin-bottom: ${(props)=> props.type === "sm" ? "10px" : "45px"};
 cursor:pointer;
 display: ${(props)=> props.type === "sm" &&"flex"};
@@ -65,24 +65,24 @@ color: ${({theme})=>theme.text}
 
 function Card({type , video}) {
   const block = useSelector((state)=>state.video.block)
-  const [user, setUser]=useState({})
+  // const [user, setUser]=useState({})
+  const {user}= useSelector((state)=>state.auth)
 
-  useEffect(()=>{
-    userInstance.get(`/find/${video?.userId}`)
-    .then((res)=>{
+
+  // useEffect(()=>{
+  //   userInstance.get(`/find/${video?.userId}`)
+  //   .then((res)=>{
       
-      setUser(res.data)
-    })
-    .catch((err)=>{
-      console.log(err.message);
-    })
-  },[block])
+  //     setUser(res.data)
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err.message);
+  //   })
+  // },[])
 
 
   const handleViews =()=>{
      if(user){
-
-       console.log('views sssssssssssssss❤️❤️❤️❤️❤️❤️❤️❤️❤️',video,"userssss",user);
        videoInstance.put( `/view/${video._id}`,{userId : user._id})
        .then((res)=>{
          console.log(res,"res of views😎😎😎😎😎");
@@ -102,11 +102,11 @@ function Card({type , video}) {
      <Image type={type} 
      src={video?.imgUrl} />
      <Details  type={type}>
-      <UserImage type={type} src={loop} />
+      <UserImage type={type} src={`http://localhost:5000/images/profile/${video?.userId?.image}`} />
       <Texts>
         <Title>{video?.title}</Title>
-        <UserName>{user.username}</UserName>
-        <Info>{video?.views.length} views   • {format(video?.createdAt)}</Info>
+        <UserName>{video?.userId?.username}</UserName>
+        <Info>{video?.views?.length} views   • {format(video?.createdAt)}</Info>
       </Texts>
       </Details>
     </Container>

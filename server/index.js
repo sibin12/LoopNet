@@ -1,11 +1,14 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import authRouter from './routes/auth.js' 
-import videoRouter from './routes/video.js'
-import userRouter from './routes/user.js'
-import commentRouter from './routes/comment.js'
-import adminRouter from './routes/admin.js'
+import authRouter from './routes/authRoutes.js' 
+import videoRouter from './routes/videoRoutes.js'
+import userRouter from './routes/userRoutes.js'
+import commentRouter from './routes/commentRoutes.js'
+import adminRouter from './routes/adminRoutes.js'
+import chatRouter from './routes/chatRoutes.js'
+import messageRouter from './routes/messageRoutes.js'
+
 import {connect} from './config/db.js'
 import cookieParser from 'cookie-parser'
 // const authController = require('./controllers/authController')
@@ -30,6 +33,8 @@ app.use('/video',videoRouter)
 app.use('/users',userRouter)
 app.use("/comments", commentRouter);
 app.use('/admin',adminRouter)
+app.use('/chat',chatRouter)
+app.use('/message',messageRouter)
 
 app.use((err, req,res, next)=>{
     const status = err.status || 500;

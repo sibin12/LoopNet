@@ -33,7 +33,7 @@ connect();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(cors({origin: "http://localhost:3000", methods: "GET,POST,PUT,DELETE", credentials: true}))
+app.use(cors({origin: "https://loopnet.gadgetgalaxy.live", methods: "GET,POST,PUT,DELETE", credentials: true}))
 app.use(cookieParser())
 
 app.use(express.json())
@@ -42,13 +42,13 @@ app.use(express.static(path.join(__dirname,'public')))
 
 app.use('/images',express.static('/public/images/profile'))
 
-app.use('/auth' , authRouter)
-app.use('/video',videoRouter)
-app.use('/users',userRouter)
-app.use("/comments", commentRouter);
-app.use('/admin',adminRouter)
-app.use('/chat',chatRouter)
-app.use('/message',messageRouter)
+app.use('/api/auth' , authRouter)
+app.use('/api/video',videoRouter)
+app.use('/api/users',userRouter)
+app.use("/api/comments", commentRouter);
+app.use('/api/admin',adminRouter)
+app.use('/api/chat',chatRouter)
+app.use('/api/message',messageRouter)
 
 
 
@@ -73,7 +73,7 @@ const server = app.listen(process.env.PORT, ()=> console.log("server started"))
 const io = new SocketServer(server, {
     pingTimeout:60000,
     cors: {
-      origin: "http://localhost:3000"
+      origin: "http://loopnet.gadgetgalaxy.live"
     },
   });
   

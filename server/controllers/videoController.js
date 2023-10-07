@@ -81,6 +81,7 @@ export const random = async (req, res, next) => {
 
 export const getByTag = async (req, res, next) => {
   const tags = req.query.tags.split(",");
+  console.log(tags);
   try {
     const videos = await Video.find({ tags: { $in: tags } }).limit(10)
     .populate("userId", "username image email subscribers")

@@ -14,7 +14,6 @@ export const addComment = async (req, res, next) => {
 
 export const deleteComment = async (req, res, next) => {
   try {
-    console.log("deleteing comment",req.params.id);
     
       await Comment.findByIdAndDelete(req.params.id);
       res.status(200).json("The comment has been deleted.");
@@ -29,7 +28,6 @@ export const getComments = async (req, res, next) => {
   try {
     const comments = await Comment.find({ videoId: req.params.videoId })
     .populate('replies.userId',);
-    console.log(comments,"commentssss");
     res.status(200).json(comments);
   } catch (err) {
     next(err);
@@ -44,7 +42,6 @@ export const replyComment = async (req, res, next)=>{
 
     const comment = await Comment.findById(req.body.commentId);
     if (!comment) {
-      console.log("comment not found");
       return next(createError(404, 'Comment not found'));
     }
 
@@ -53,7 +50,6 @@ export const replyComment = async (req, res, next)=>{
       text: req.body.replyText,
     };
 
-    console.log("new comment reply", newNestedComment);
     comment.replies.push(newNestedComment);
     await comment.save();
     res.status(200).json(comment);

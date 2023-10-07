@@ -17,14 +17,13 @@ export const adminLogin = (async (req, res, next) => {
         const user = await User.findOne({ email: req.body.email })
         if (!user) {
             console.log("email not found");
-            // throw new Error("Invalid credentials")
+            throw new Error("Invalid credentials")
             return next(createError(404, "admin not found!"))
         } else if (user.isAdmin) {
             const comparePass = await bcrypt.compare(req.body.password, user.password)
             if (!comparePass) {
                 console.log("wrong password");
                 return next(createError(404, "Wrong credentials"))
-                // throw new Error("Invalid credentials")
             }
 
             const { password, ...others } = user._doc
@@ -59,7 +58,6 @@ export const UserDetails = async (req, res, next) => {
     );
     try {
         const users = await User.find()
-        // console.log(users, "userdetails");
         res.status(200).json(users)
     } catch (error) {
         console.log(error.message);
@@ -108,14 +106,12 @@ export const UnblockVideo = async (req, res) => {
 
         return res.status(200).json({ message: 'Video unblocked successfully' });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 export const BlockUser = async (req, res) => {
     const { userId } = req.params;
- console.log(userId,"😊😊😊😊");
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -126,14 +122,12 @@ export const BlockUser = async (req, res) => {
 
         res.status(200).json({ message: 'User blocked successfully' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 export const UnblockUser = async (req, res) => {
     const { userId } = req.params;
-    console.log(userId,"😊😊😊😊");
 
     try {
         const user = await User.findById(userId);
@@ -145,7 +139,6 @@ export const UnblockUser = async (req, res) => {
 
         res.status(200).json({ message: 'User unblocked successfully' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

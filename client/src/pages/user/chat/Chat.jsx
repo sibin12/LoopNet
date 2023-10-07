@@ -236,7 +236,7 @@ function Chat({ fetchAgain }) {
             Click here to Search
           </SearchInput>
         </SearchBar>
-        <NotificationsIcon />
+        {/* <NotificationsIcon /> */}
       </Navbar>
       {open && (<GroupChatModal open={open} onClose={handleCloseModal} />)}
       {edit && ( <UpdateGroupChatModal open={edit} onClose={handleCloseEdit} fetchAgain={fetchAgain} setFetchAgain={!fetchAgain} />)}

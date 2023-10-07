@@ -9,10 +9,8 @@ dotenv.config()
 //register
 export const register = (async (req, res, next) => {
     try {
-        console.log("register a user",req.body);
         const username = await User.findOne({ username: req.body.username })
         if (username) {
-            console.log("user exists");
             return next(createError(404, "This username is taken"))
         }
         const isExisting = await User.findOne({ email: req.body.email })
@@ -24,8 +22,6 @@ export const register = (async (req, res, next) => {
         const newUser = await User.create({ ...req.body, password: hashPassword })
         const { password, ...others } = newUser._doc
         const token = jwt.sign({ id: newUser._id}, process.env.JWT_SECRET, { expiresIn: '5h' })
-
-        console.log(token,"tokennnnn", others);
         
         res.cookie("access_token", token,{
             httpOnly: false,
@@ -46,7 +42,6 @@ export const login = (async (req, res, next) => {
         
         const user = await User.findOne({ email: req.body.email })
         if (!user) {
-            console.log("email not found");
             // throw new Error("Invalid credentials")
             return next(createError(404, "User not found!"))
         }
@@ -58,7 +53,6 @@ export const login = (async (req, res, next) => {
         if (!comparePass) {
             console.log("wrong password");
             return next(createError(404, "Wrong credentials"))
-            // throw new Error("Invalid credentials")
         }
 
         const { password, ...others } = user._doc

@@ -19,11 +19,9 @@ dotenv.config()
 // };
 
  export const verifyToken = (req, res, next) => {
-    console.log("checking verifytoken");
-    console.log(req.headers,"headers");
+   
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
-     console.log(token,"toke");
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.status(403).json({ message: 'Invalid token' });
         req.user = user;
@@ -33,31 +31,17 @@ dotenv.config()
 
 
 
+export const verifyAdminToken = (req,res,next)=>{
+     if(!req.headers.authorization) return res.status(403).json({msg: "not authorized "})
 
+     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")){
+        const token = req.headers.authorization.split(' ')[1]
 
-
-
-
-
-
-
-
-
-// import jwt from 'jsonwebtoken'
-
-// export const verifyToken = (req,res,next)=>{
-//     console.log(req.headers.authorization,"verifytoken");
-//      if(!req.headers.authorization) return res.status(403).json({msg: "not authorized "})
-
-//      if(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")){
-//         const token = req.headers.authorization.split(' ')[1]
-
-//         jwt.verify(token, process.env.JWT_SECRET, (err,data)=>{
-//             if(err) return res.status(403).json({msg:" wrong or expired token "})
+        jwt.verify(token, process.env.ADMIN_JWT_SECRET, (err,data)=>{
+            if(err) return res.status(403).json({msg:" wrong or expired token "})
             
-//                 req.user = data
-//                 next()
-//         })
-//      }
-// }
-
+                req.user = data
+                next()
+        })
+     }
+}

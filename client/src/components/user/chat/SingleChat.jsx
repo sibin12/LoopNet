@@ -217,7 +217,6 @@ socket.emit('stop typing', selectedChat._id)
 
         },timerLength)
 
-        //need to implement typing .....
     }
     return (
         <Container>

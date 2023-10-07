@@ -21,7 +21,6 @@ export const uploadProfileImage = async (req, res) => {
     try {
         uploadImage(req, res, async (err) => {
             if (err) {
-                console.error(err);
                 return res.status(500).json({ message: 'Image upload failed' });
             }
             const userId = req.user.id;

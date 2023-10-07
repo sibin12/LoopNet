@@ -3,42 +3,42 @@ const token = localStorage.getItem('token');
 const adminToken = localStorage.getItem('admintoken')
 
 const userInstance = axios.create({
-    baseURL:"http://localhost:5000/users",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/users",
 })
 
 const authInstance = axios.create({
-    baseURL:"http://localhost:5000/auth",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/auth",
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
 })
 const videoInstance = axios.create({
-    baseURL:"http://localhost:5000/video",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/video",
 
 })
 const commentInstance = axios.create({
-    baseURL:"http://localhost:5000/comments",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/comments",
 
 })
 
 const chatInstance = axios.create({
-    baseURL:"http://localhost:5000/chat",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/chat",
 })
 
 const messageInstance = axios.create({
-    baseURL:"http://localhost:5000/message",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/message",
 })
 
 const adminAuthInstance = axios.create({
-    baseURL:"http://localhost:5000/admin",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/admin",
    
     headers: {
         Accept:"application/json"
     }
 })
 const adminInstance = axios.create({
-    baseURL:"http://localhost:5000/admin",
+    baseURL:"https://loopnet.gadgetgalaxy.live/api/admin",
 
 })
 
